@@ -9272,6 +9272,120 @@ addcmd('unloopbring',{'noloopbring'},function(args, speaker)
 	end
 end)
 
+local autoCombatTargets = {}
+local autoCombatDelay = 0
+
+addcmd('autocombat', {'ac'}, function(args, speaker)
+	local players = getPlayer(args[1], speaker)
+
+	for _, v in pairs(players) do
+		local player = Players[v]
+
+		if player and player ~= speaker and not autoCombatTargets[player.Name] then
+			autoCombatTargets[player.Name] = true
+
+			task.spawn(function()
+				while autoCombatTargets[player.Name] and Players:FindFirstChild(player.Name) do
+					local char = speaker.Character
+					local combat = char and combat:FindFirstChild("Combat")
+
+					if combat then
+						local script = combat:FindFirstChild("combatClientScript")
+						local replicator = script and script:FindFirstChild("replicator")
+
+						if replicator then
+							replicator:FireServer("punch")
+						end
+					end
+
+					task.wait(autoCombatDelay)
+				end
+
+				autoCombatTargets[player.Name] = nil
+			end)
+		end
+	end
+end)
+
+addcmd('unautocombat', {'uac'}, function(args, speaker)
+	local players = getPlayer(args[1], speaker)
+
+	for _, v in pairs(players) do
+		local player = Players[v]
+
+		if player then
+			autoCombatTargets[player.Name] = nil
+		end
+	end
+end)
+
+local autoKillTargets = {}
+
+addcmd('autokill', {'ak'}, function(args, speaker)
+	local players = getPlayer(args[1], speaker)
+
+	for _, v in pairs(players) do
+		local player = Players[v]
+
+		if player and player ~= speaker and not autoKillTargets[player.Name] then
+			autoKillTargets[player.Name] = true
+
+			execCmd("loopbring " .. player.Name)
+
+			task.spawn(function()
+				while autoKillTargets[player.Name] and Players:FindFirstChild(player.Name) do
+					local char = speaker.Character
+					local combat = char and char:FindFirstChild("Combat")
+					local script = combat and combat:FindFirstChild("combatClientScript")
+					local replicator = script and script:FindFirstChild("replicator")
+
+					if replicator then
+						replicator:FireServer("punch")
+					end
+
+					task.wait()
+				end
+			end)
+		end
+	end
+end)
+
+addcmd('unautokill', {'uak'}, function(args, speaker)
+	local players = getPlayer(args[1], speaker)
+
+	for _, v in pairs(players) do
+		local player = Players[v]
+
+		if player then
+			autoKillTargets[player.Name] = nil
+			execCmd("unloopbring " .. player.Name)
+		end
+	end
+end)
+
+local fpsCap = nil
+
+addcmd('setfps', {'fps'}, function(args, speaker)
+	local fps = tonumber(args[1])
+
+	if not fps then
+		return notify("Set FPS", "Usage: ;setfps [number]")
+	end
+
+	fpsCap = fps
+
+	task.spawn(function()
+		while fpsCap == fps do
+			setfpscap(fps)
+			task.wait(1)
+		end
+	end)
+end)
+
+addcmd('unsetfps', {'unfps'}, function(args, speaker)
+	fpsCap = nil
+end)
+
 local walkto = false
 local waypointwalkto = false
 addcmd('walkto',{'follow'},function(args, speaker)
