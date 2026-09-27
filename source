@@ -4905,9 +4905,9 @@ CMDs[#CMDs + 1] = {NAME = 'addplugin / plugin [name]', DESC = 'Add a plugin via 
 CMDs[#CMDs + 1] = {NAME = 'removeplugin / deleteplugin [name]', DESC = 'Remove a plugin via command'}
 CMDs[#CMDs + 1] = {NAME = 'reloadplugin [name]', DESC = 'Reloads a plugin'}
 CMDs[#CMDs + 1] = {NAME = 'addallplugins / loadallplugins', DESC = 'Adds all available plugins from the workspace folder'}
-CMDs[#CMDs + 1] = (NAME = 'setfps', DESC = 'Caps your fps at your desired amount'}
-CMDs[#CMDs + 1] = (NAME = 'autokill', DESC = 'Autokill whatever player you want'}
-CMDs[#CMDs + 1] = (NAME = 'autocombat', DESC = 'Combat invisibly by spamming combat event'}
+CMDs[#CMDs + 1] = {NAME = 'setfps', DESC = 'Caps your fps at your desired amount'}
+CMDs[#CMDs + 1] = {NAME = 'autokill', DESC = 'Autokill whatever player you want'}
+CMDs[#CMDs + 1] = {NAME = 'autocombat', DESC = 'Combat invisibly by spamming combat event'}
 
 -- wait()
 
